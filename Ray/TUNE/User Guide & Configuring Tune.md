@@ -325,7 +325,7 @@ tune.run(
 
 
 
-`resume=True` 를 사용할 때 Ray Tune이 실험 폴더(보통 `~/ray_results/my_experiment` 에 저장됨)를 감지할 수 있도록  `name`을 전달해야 합니다. 첫 번째 호출에서 `name`을 전달하는 것을 잊은 경우 실행을 재개할 때 `name`을 전달할 수 있습니다. 이 경우 실험 이름에 날짜 접미사가  `tune.run(my_trainable)` 그렇다면, 실험 이름이 날짜 접미사가 가능성이 있음을 유의하시기 바랍니다 의 이 같은 같은 힘의 모양을 : .`name``my_trainable_2021-01-29_10-16-44`
+`resume=True` 를 사용할 때 Ray Tune이 실험 폴더(보통 `~/ray_results/my_experiment` 에 저장됨)를 감지할 수 있도록  `name`을 전달해야 합니다. 첫 번째 호출에서 `name`을 전달하는 것을 잊은 경우 실행을 재개할 때 `name`을 전달할 수 있습니다. 이 경우 실험 이름에 날짜 접미사가 붙으므로  `tune.run(my_trainable)`를 실행할 때 `name`은 `my_trainable_2021-01-29_10-16-44`의 형태로 될 것입니다.
 
 원래 튜닝 실행의 결과 테이블을 보면 전달해야 하는 이름을 확인할 수 있습니다.
 
@@ -340,15 +340,21 @@ Number of trials: 1/1 (1 RUNNING)
 
 
 
-## 대규모 데이터 세트 처리 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#handling-large-datasets)
+## Handling Large Datasets [¶](https://docs.ray.io/en/latest/tune/user-guide.html#handling-large-datasets)
 
-드라이버에서 큰 개체(예: 훈련 데이터, 모델 가중치)를 계산하고 각 시도에서 해당 개체를 사용하려는 경우가 많습니다.
+드라이버에서 큰 개체(예: 학습 데이터, 모델 가중치)를 계산하고 각 trial에서 해당 개체를 사용하려는 경우가 많습니다.
 
-Tune은 `tune.with_parameters()`큰 개체를 훈련 가능 개체로 브로드캐스트할 수 있는 래퍼 기능 을 제공합니다 . 이 래퍼와 함께 전달된 개체는 [Ray 개체 저장소에 저장](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 되고 자동으로 가져와서 매개변수로 훈련 가능 [개체에](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 전달됩니다.
+Tune은 큰 개체를 훈련 가능 개체로 브로드캐스트할 수 있는 래퍼 기능 `tune.with_parameters()`를 제공합니다 . 이 래퍼와 함께 전달된 개체는 [Ray 개체 저장소에 저장](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 되고 자동으로 가져와서 매개변수로 훈련 가능 개체에 전달됩니다.
+
+---
 
 팁
 
-개체의 크기가 작거나 [Ray 개체 저장소](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 에 이미 존재 하는 경우 사용할 필요가 없습니다 `tune.with_parameters()`. [부분](https://docs.python.org/3/library/functools.html#functools.partial) 을 사용 하거나 `config`대신 에 직접 전달할 수 있습니다 .
+개체의 크기가 작거나 [Ray 개체 저장소](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 에 이미 존재 하는 경우 `tune.with_parameters()` 를 사용할 필요가 없습니다 . [부분](https://docs.python.org/3/library/functools.html#functools.partial)을 사용 하거나 `config`대신 직접 전달할 수 있습니다 .
+
+---
+
+
 
 ```python
 from ray import tune
@@ -368,7 +374,7 @@ tune.run(tune.with_parameters(f, data=data))
 
 
 
-## 시도 중지 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-trials)
+## Stopping Trials [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-trials)
 
 `stop`인수를 에 전달하여 시도가 일찍 중지되는 시점을 제어할 수 있습니다 `tune.run`. 이 인수는 사전, 함수 또는 `Stopper`클래스를 인수로 취 합니다.
 
