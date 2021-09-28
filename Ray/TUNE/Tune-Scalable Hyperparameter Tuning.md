@@ -1,5 +1,7 @@
 # Tune: Scalable Hyperparameter Tuning [¶](https://docs.ray.io/en/latest/tune/index.html#tune-scalable-hyperparameter-tuning)
 
+
+
 [![../_images/tune.png](https://docs.ray.io/en/latest/_images/tune.png)](https://docs.ray.io/en/latest/_images/tune.png)
 
 Tune은 모든 규모에서 실험 실행 및 하이퍼파라미터 조정을 위한 Python 라이브러리입니다.
@@ -52,7 +54,7 @@ print("Best config: ", analysis.get_best_config(
 df = analysis.results_df
 ```
 
-![Copy to clipboard](https://docs.ray.io/en/latest/_static/copy-button.svg)
+
 
 TensorBoard가 설치된 경우 모든 시도 결과를 자동으로 시각화합니다.
 
@@ -60,7 +62,7 @@ TensorBoard가 설치된 경우 모든 시도 결과를 자동으로 시각화�
 tensorboard --logdir ~/ray_results
 ```
 
-![Copy to clipboard](https://docs.ray.io/en/latest/_static/copy-button.svg)
+
 
 [![../_images/tune-start-tb.png](https://docs.ray.io/en/latest/_images/tune-start-tb.png)](https://docs.ray.io/en/latest/_images/tune-start-tb.png)
 
@@ -115,7 +117,7 @@ HyperOpt 또는 Bayesian 최적화와 같은 기존 하이퍼파라미터 조정
 - [동영상] [RISECamp 2018 강연](https://www.youtube.com/watch?v=38Yd_dXW51Q)
 - [동영상] [최신 초매개변수 최적화 가이드(PyData LA 2019)](https://www.youtube.com/watch?v=10uz5U3Gy6E) ( [슬라이드](https://speakerdeck.com/richardliaw/a-modern-guide-to-hyperparameter-optimization) )
 
-## 인용 조정 [¶](https://docs.ray.io/en/latest/tune/index.html#citing-tune)
+## Tune 인용 [¶](https://docs.ray.io/en/latest/tune/index.html#citing-tune)
 
 Tune이 학술 연구에 도움이 된다면 [우리 논문](https://arxiv.org/abs/1807.05118)을 인용하는 것이 좋습니다 . 다음은 bibtex의 예입니다.
 

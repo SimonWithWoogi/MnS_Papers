@@ -21,7 +21,7 @@ def objective(x, a, b):
     return a * (x ** 0.5) + b
 ```
 
-![Copy to clipboard](https://docs.ray.io/en/latest/_static/copy-button.svg)
+
 
 Tune을 사용하려면 이 함수를 [학습 가능한 경량 API](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#trainable-docs)로 래핑해야 합니다 . [함수 기반 버전](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#tune-function-api) 또는 [클래스 ](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#tune-class-api)[기반 버전을](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#tune-function-api) 사용할 수 있습니다 .
 
@@ -184,12 +184,14 @@ tune.run(
 
 Tune에는 [Nevergrad](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#nevergrad) 및 [Hyperopt](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#tune-hyperopt) 와 같은 많은 인기 있는 **최적화** 라이브러리와 통합되는 SearchAlgorithms가 있습니다. Tune은 제공된 search space를 search algorithms/기본 라이브러리가 기대하는 search space로 자동 변환합니다.
 
-```
+---
+
 Note:
 현재 모든 search algorithms에 대해 자동 search space 변환을 구현하는 과정에 있습니다. 현재 이것은 AxSearch, BayesOpt, Hyperopt 및 Optuna에서 작동합니다. 다른 search algorithms이 곧 추가되겠지만 현재로서는 각각의 search space으로 인스턴스화해야 합니다.
-```
 
-문서를 참조하십시오. [검색 알고리즘(tune.suggest)](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#tune-search-alg).
+---
+
+문서를 참조하십시오. [Search Algorithms (tune.suggest)](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#tune-search-alg).
 
 
 

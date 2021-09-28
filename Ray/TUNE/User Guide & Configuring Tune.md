@@ -6,7 +6,7 @@
 
 팁
 
-계속하기 전에 [주요 개념](https://docs.ray.io/en/latest/tune/key-concepts.html#tune-60-seconds) 을 읽어 보십시오 .
+계속하기 전에 [주요 개념](https://docs.ray.io/en/latest/tune/key-concepts.html#tune-60-seconds)을 읽어 보십시오 .
 
 ---
 
@@ -34,8 +34,6 @@
 # If you have 4 CPUs on your machine, this will run 4 concurrent trials at a time.
 tune.run(trainable, num_samples=10)
 ```
-
-
 
  `resources_per_trial`로 이 병렬 처리를 재정의할 수 있습니다. 여기에서 사전이나 [`PlacementGroupFactory`](https://docs.ray.io/en/latest/tune/api_docs/internals.html#ray.tune.utils.placement_groups.PlacementGroupFactory) 개체를 사용하여 리소스 요청을 지정할 수 있습니다 . 어쨌든 Ray Tune은 각 trial에 대해 배치 그룹을 시작하려고 시도합니다.
 
@@ -82,7 +80,7 @@ tune.run(trainable, num_samples=10, resources_per_trial={"cpu": 2, "gpu": 1})
 
 ### Concurrent samples [¶](https://docs.ray.io/en/latest/tune/user-guide.html#concurrent-samples)
 
-[Search algorithm](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#tune-search-alg)을 사용하는 경우, 평가되는 Trial 횟수를 제한할 수 있습니다. 예를 들어, 순차 최적화를 수행하기 위해 시도 평가를 직렬화할 수 있습니다.
+[Search algorithm](https://docs.ray.io/en/latest/tune/api_docs/suggestion.html#tune-search-alg)을 사용하는 경우, 평가되는 Trial 횟수를 제한할 수 있습니다. 예를 들어, 순차 최적화를 수행하기 위해 Trial 평가를 직렬화할 수 있습니다.
 
 다음의 경우 `ray.tune.suggest.ConcurrencyLimiter`가 동시성 양을 제한합니다.
 
@@ -106,7 +104,7 @@ scheduler = AsyncHyperBandScheduler()
 
 팁
 
-이 섹션에서는 여러 컴퓨터에서 Tune을 실행하는 방법을 다룹니다. 분산 교육 작업 조정에 대한 지침 은 [분산 교육](https://docs.ray.io/en/latest/tune/user-guide.html#tune-dist-training) 을 참조하세요.
+이 섹션에서는 여러 컴퓨터에서 Tune을 실행하는 방법을 다룹니다. 분산 학습 작업 조정에 대한 지침 은 [분산 학습](https://docs.ray.io/en/latest/tune/user-guide.html#tune-dist-training) 을 참조하세요.
 
 ---
 
@@ -160,7 +158,7 @@ parameters = {
 tune.run(trainable, config=parameters)
 ```
 
-기본적으로 각 랜덤 변수와 그리드 검색 포인트는 한 번 샘플링됩니다. 여러 무작위 샘플을 가져오려면 `num_samples: N`실험 구성에 추가 하세요. *grid_search*이 인수로 제공된 경우, 그리드는 `num_samples` 만큼 반복됩니다.
+기본적으로 각 랜덤 변수와 그리드 검색 포인트는 한 번 샘플링됩니다. 여러 무작위 샘플을 가져오려면 `num_samples: N`을 실험 구성에 추가 하세요. *grid_search*가 인수로 제공된 경우, 그리드는 `num_samples` 만큼 반복됩니다.
 
 ```python
  # num_samples=10 repeats the 3x3 grid search 10 times, for a total of 90 trials
@@ -202,7 +200,7 @@ class Trainable(tune.Trainable):
         return dict(acc=accuracy, metric_foo=random_metric_1, bar=metric_2)
 ```
 
-학습하는 동안 Tune은 사용자가 제공한 값과 함께 아래 지표를 자동으로 기록합니다. 이 모든 것은 중지 조건으로 사용되거나 Trial Schedulers/Search Algorithms에 매개변수로 전달될 수 있습니다.
+학습하는 동안 Tune은 사용자가 제공한 값과 함께 아래 지표를 자동으로 기록합니다. 이 모든 것은 종료 조건으로 사용되거나 Trial Schedulers/Search Algorithms에 매개변수로 전달될 수 있습니다.
 
 - `config`: 하이퍼파라미터 구성
 - `date`: 결과가 처리된 문자열 형식의 날짜 및 시간
@@ -235,7 +233,7 @@ class Trainable(tune.Trainable):
 > - 선점형 머신 사용(마지막 체크포인트에서 자동으로 복원)
 > - HyperBand 및 PBT와 같은 Trial Scheduler를 사용할 때 Trial을 일시 중지합니다.
 
-Tune의 checkpointing 기능을 사용하려면 `checkpoint_dir`함수 서명에 인수를 노출 하고 `tune.checkpoint_dir` 호출해야 합니다.
+Tune의 checkpointing 기능을 사용하려면 `checkpoint_dir`인자를 함수 서명에 노출 하고 `tune.checkpoint_dir` 를 호출해야 합니다.
 
 ```python
 import os
@@ -280,17 +278,15 @@ tune.run(
 
 
 
-
-
 ### Distributed Checkpointing [¶](https://docs.ray.io/en/latest/tune/user-guide.html#distributed-checkpointing)
 
-다중 노드 클러스터에서 Tune은 헤드 노드에서 모든 Trial 체크포인트의 복사본을 자동으로 생성합니다. 이를 위해서는 [클러스터 런처로](https://docs.ray.io/en/latest/cluster/cloud.html#cluster-cloud) Ray 클러스터를 시작 해야 하며 rsync도 설치해야 합니다.
+다중 노드 클러스터에서 Tune은 헤드 노드에 모든 Trial 체크포인트의 복사본을 자동으로 생성합니다. 이를 위해서는 [클러스터 런처로](https://docs.ray.io/en/latest/cluster/cloud.html#cluster-cloud) Ray 클러스터를 시작 해야 하며 rsync도 설치해야 합니다.
 
 동기화를 트리거 하려면 `tune.checkpoint_dir`API를 사용해야 합니다 .
 
-Kubernetes에서 Ray Tune을 실행하는 경우 일반적으로 체크포인트 공유를 위해  [`DurableTrainable`](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#ray.tune.durable) 또는 공유 파일 시스템을 사용해야 합니다 . Kubernetes <tune-kubernetes>에서 Tune을 실행하기 위한 모범 사례는 여기를 참조하세요.
+Kubernetes에서 Ray Tune을 실행하는 경우, 일반적으로 체크포인트 공유를 위해  [`DurableTrainable`](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#ray.tune.durable) 또는 공유 파일 시스템을 사용해야 합니다 . Kubernetes <tune-kubernetes>에서 Tune을 실행하기 위한 모범 사례는 여기를 참조하세요.
 
-클러스터 시작 관리자를 사용하지 않는 경우 NFS 또는 전역 파일 시스템을 설정하고 노드 간 동기화를 비활성화해야 합니다.
+클러스터 런처를 사용하지 않는 경우 NFS 또는 전역 파일 시스템을 설정하고 노드 간 동기화를 비활성화해야 합니다.
 
 ```python
 sync_config = tune.SyncConfig(sync_to_driver=False)
@@ -299,11 +295,11 @@ tune.run(func, sync_config=sync_config)
 
 
 
-## 튜닝 실행 중지 및 재개 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-and-resuming-a-tuning-run)
+## Stopping and resuming a tuning run [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-and-resuming-a-tuning-run)
 
-Ray Tune은 실험 상태를 주기적으로 체크포인트하여 실패하거나 중지할 때 다시 시작할 수 있습니다. 체크포인트 기간은 훈련 결과 및 일정을 처리하는 데 시간의 최소 95%가 사용되도록 동적으로 조정됩니다.
+Ray Tune은 실험 상태를 주기적으로 체크포인트하여 실패하거나 종료됐을 때 다시 시작할 수 있습니다. 체크포인트 간격은 학습 결과를 처리하고 및 스케쥴링에 걸리는 시간의 최소 95%가 사용되도록 동적으로 조정됩니다.
 
- `tune.run()`을 실행 중인 프로세스에 SIGINT 신호를 보내면(대개 콘솔에서 Ctrl+C를 누를 때 발생) Ray Tune은 훈련을 정상적으로 종료하고 최종 실험 수준 체크포인트를 저장합니다. 그런 다음 `resume=True` 설정과 함께 `tune.run()`을 호출하여 앞으로 이 실행을 계속할 수 있습니다.
+ `tune.run()`을 실행 중인 프로세스에 SIGINT 신호를 보내면(대개 콘솔에서 Ctrl+C를 누를 때 발생) Ray Tune은 학습을 정상적으로 종료하고 최종 실험 수준의 체크포인트를 저장합니다. 그런 다음 `resume=True` 설정과 함께 `tune.run()`을 호출하여 앞으로 이 실행을 계속할 수 있습니다.
 
 ```python
 tune.run(
@@ -344,17 +340,15 @@ Number of trials: 1/1 (1 RUNNING)
 
 드라이버에서 큰 개체(예: 학습 데이터, 모델 가중치)를 계산하고 각 trial에서 해당 개체를 사용하려는 경우가 많습니다.
 
-Tune은 큰 개체를 훈련 가능 개체로 브로드캐스트할 수 있는 래퍼 기능 `tune.with_parameters()`를 제공합니다 . 이 래퍼와 함께 전달된 개체는 [Ray 개체 저장소에 저장](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 되고 자동으로 가져와서 매개변수로 훈련 가능 개체에 전달됩니다.
+Tune은 큰 개체를 학습 가능 개체로 브로드캐스트할 수 있는 래퍼 기능 `tune.with_parameters()`를 제공합니다 . 이 래퍼와 함께 전달된 개체는 [Ray 개체 저장소에 저장](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 되고 자동으로 가져와서 매개변수로 학습 가능 개체에 전달됩니다.
 
 ---
 
 팁
 
-개체의 크기가 작거나 [Ray 개체 저장소](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 에 이미 존재 하는 경우 `tune.with_parameters()` 를 사용할 필요가 없습니다 . [부분](https://docs.python.org/3/library/functools.html#functools.partial)을 사용 하거나 `config`대신 직접 전달할 수 있습니다 .
+개체의 크기가 작거나 개체가 이미 [Ray 개체 저장소](https://docs.ray.io/en/latest/walkthrough.html#objects-in-ray) 에 존재 하는 경우 `tune.with_parameters()` 를 사용할 필요가 없습니다 . [partials](https://docs.python.org/3/library/functools.html#functools.partial)를 사용 하거나 `config`대신 직접 전달할 수 있습니다 .
 
 ---
-
-
 
 ```python
 from ray import tune
@@ -376,11 +370,11 @@ tune.run(tune.with_parameters(f, data=data))
 
 ## Stopping Trials [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-trials)
 
-`stop`인수를 에 전달하여 시도가 일찍 중지되는 시점을 제어할 수 있습니다 `tune.run`. 이 인수는 사전, 함수 또는 `Stopper`클래스를 인수로 취 합니다.
+`stop`인수를 `tune.run`에 전달하여 trial이 종료되는 시점을 제어할 수 있습니다 . 이 인수는 사전, 함수 또는 `Stopper`클래스를 인수로 취합니다.
 
-사전이 전달되는 경우 키는 `tune.report`Function API 의 반환 결과 또는 `step()`(의 결과 `step`및 자동 완성 메트릭 포함)의 모든 필드일 수 있습니다 .
+사전이 전달되는 경우 키는 Function API의 `tune.report` 또는 `step()` (`step`및 auto-filled metrics의 결과 포함) 반환 결과의 모든 필드일 수 있습니다 .
 
-아래 예에서 각 시도는 10회 반복을 완료하거나 평균 정확도가 0.98에 도달하면 중지됩니다. 이러한 메트릭은 **증가** 하는 것으로 가정됩니다 .
+아래 예에서 각 trial은 10회 반복을 완료하거나 평균 정확도가 0.98에 도달하면 중지됩니다. 이러한 metrics는 **증가** 하는 것으로 가정됩니다 .
 
 ```python
 # training_iteration is an auto-filled metric by Tune.
@@ -390,9 +384,7 @@ tune.run(
 )
 ```
 
-
-
-더 많은 유연성을 위해 대신 함수를 전달할 수 있습니다. 함수가 전달 되면 인수로 취하여 부울 값을 반환 해야 합니다 ( 시행을 중지해야 하는 경우 및 그렇지 않은 경우).`(trial_id, result)``True``False`
+더 많은 유연성을 위해 함수를 대신 전달할 수 있습니다. 함수가 전달 되면 `(trial_id, result)`를 인수로 취하여 boolean 값을 반환 해야 합니다(Trial을 중지해야 하는 경우 `True`, 그렇지 않은 경우 `False`).
 
 ```python
 def stopper(trial_id, result):
@@ -401,9 +393,7 @@ def stopper(trial_id, result):
 tune.run(my_trainable, stop=stopper)
 ```
 
-
-
-마지막으로 `Stopper`전체 실험을 중지 하기 위해 추상 클래스를 구현할 수 있습니다 . 예를 들어 다음 예에서는 개별 시도에서 기준이 충족된 후 모든 시도를 중지하고 새 시도가 시작되지 않도록 합니다.
+마지막으로 전체 실험을 종료하기 위해 `Stopper` 추상 클래스를 구현할 수 있습니다 . 예를 들어 다음 예에서는 어떤 Trial이든 기준이 충족되면 모든 Trial을 종료하고 새로운 Trial이 시작되지 않도록 합니다.
 
 ```python
 from ray.tune import Stopper
@@ -427,19 +417,19 @@ tune.run(my_trainable, stop=stopper)
 
 
 
-위의 예에서 현재 실행 중인 시도는 즉시 중지되지 않지만 현재 반복이 완료되면 중지됩니다.
+위의 예에서 현재 실행 중인 Trial은 즉시 종료되지 않지만 현재 iteration이 완료되면 종료됩니다.
 
-Ray Tune은 즉시 사용 가능한 스토퍼 클래스 세트와 함께 제공됩니다. [스토퍼](https://docs.ray.io/en/latest/tune/api_docs/stoppers.html#tune-stoppers) 문서를 참조하십시오 .
+Ray Tune은 즉시 사용 가능한 stopper classes가 함께 제공됩니다. [Stopper](https://docs.ray.io/en/latest/tune/api_docs/stoppers.html#tune-stoppers) 문서를 참조하십시오.
 
 
 
-## 로깅 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#logging)
+## Logging [¶](https://docs.ray.io/en/latest/tune/user-guide.html#logging)
 
-기본적으로 Tune은 Tensorboard, CSV 및 JSON 형식에 대한 결과를 기록합니다. 모델 가중치 또는 기울기와 같은 더 낮은 수준을 기록해야 하는 경우 [훈련 가능한 기록을](https://docs.ray.io/en/latest/tune/api_docs/logging.html#trainable-logging) 참조하십시오 .
+기본적으로 Tune은 Tensorboard, CSV 및 JSON 형식으로 결과를 기록합니다. 모델 가중치 또는 gradients와 같은 lower level 정보를 기록해야 하는 경우 [학습 가능한 Logging](https://docs.ray.io/en/latest/tune/api_docs/logging.html#trainable-logging) 참조하십시오.
 
-**여기에서 로깅 및 사용자 정의에 대해 자세히 알아보십시오** . [로거(tune.logger)](https://docs.ray.io/en/latest/tune/api_docs/logging.html#loggers-docstring) .
+**여기에서 로깅 및 사용자 정의에 대해 자세히 알아보십시오**. [Loggers (tune.logger)](https://docs.ray.io/en/latest/tune/api_docs/logging.html#loggers-docstring) .
 
-Tune은 각 시도의 결과를 지정된 로컬 디렉토리 아래의 하위 폴더에 기록합니다(기본값은 `~/ray_results`.
+Tune은 각 Trial의 결과를 지정된 로컬 디렉토리(기본값은 `~/ray_results`)의 하위 폴더에 기록합니다.
 
 ```python
 # This logs to 2 different trial folders:
@@ -448,9 +438,7 @@ Tune은 각 시도의 결과를 지정된 로컬 디렉토리 아래의 하위 �
 tune.run(trainable, num_samples=2)
 ```
 
-
-
-당신은 지정할 수 있습니다 `local_dir`과 `trainable_name`:
+`local_dir`와 `trainable_name`을 지정할 수 있습니다.
 
 ```python
 # This logs to 2 different trial folders:
@@ -459,9 +447,7 @@ tune.run(trainable, num_samples=2)
 tune.run(trainable, num_samples=2, local_dir="./results", name="test_experiment")
 ```
 
-
-
-사용자 지정 평가판 폴더 이름을 지정하려면 use `trial_name_creator`인수를 tune.run 에 전달할 수 있습니다 . 이것은 다음 서명이 있는 함수를 사용합니다.
+Trial 폴더 이름을 지정하려면 `trial_name_creator`인수를 `tune.run` 에 전달하십시오. 이것은 다음 서명이 있는 함수를 사용합니다.
 
 ```python
 def trial_name_string(trial):
@@ -482,29 +468,23 @@ tune.run(
 )
 ```
 
-
-
-평가판: [평가판](https://docs.ray.io/en/latest/tune/api_docs/internals.html#trial-docstring) 문서를 참조하십시오 .
+Trial 문서를 참조하십시오 : [Trial](https://docs.ray.io/en/latest/tune/api_docs/internals.html#trial-docstring)
 
 
 
-## 텐서보드(로깅) [¶](https://docs.ray.io/en/latest/tune/user-guide.html#tensorboard-logging)
+## Tensorboard (Logging) [¶](https://docs.ray.io/en/latest/tune/user-guide.html#tensorboard-logging)
 
-Tune은 텐서보드 파일을 자동으로 출력합니다 `tune.run`. 텐서보드에서 학습을 시각화하려면 tensorboardX를 설치하세요.
+Tune은 `tune.run`이 실행되는 동안 텐서보드 파일을 자동으로 출력합니다. 텐서보드에서 학습을 시각화하려면 tensorboardX를 설치하세요.
 
 ```python
 $ pip install tensorboardX
 ```
-
-
 
 그런 다음 실험을 실행한 후 결과의 출력 디렉토리를 지정하여 TensorBoard로 실험을 시각화할 수 있습니다.
 
 ```python
 $ tensorboard --logdir=~/ray_results/my_experiment
 ```
-
-
 
 sudo 액세스 권한이 없는 원격 다중 사용자 클러스터에서 Ray를 실행하는 경우 다음 명령을 실행하여 텐서보드가 tmp 디렉토리에 쓸 수 있는지 확인할 수 있습니다.
 
