@@ -24,8 +24,6 @@
 
 ---
 
-
-
 병렬도는 `resources_per_trial`(기본값은 1 CPU, 0 GPU per trial) 및 Tune에 사용 가능한 리소스( `ray.cluster_resources()`)에 의해 결정됩니다 .
 
 기본적으로 Tune은 자동으로 N개의 동시 Trial을 실행합니다. 여기서 N은 컴퓨터의 CPU(코어) 수입니다.
@@ -54,6 +52,8 @@ Tune은 GPU와 CPU를 `resources_per_trial`에서 각 Trial로 할당합니다 .
 
 훈련 가능한 함수가 더 많은 원격 작업자를 시작하는 경우, 이러한 리소스를 요청하기 위해 배치 그룹 팩토리 객체를 전달해야 합니다. 자세한 내용은 [`PlacementGroupFactory documentation`](https://docs.ray.io/en/latest/tune/api_docs/internals.html#ray.tune.utils.placement_groups.PlacementGroupFactory)를 참조하십시오.
 
+
+
 ### GPU 사용 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#using-gpus)
 
 GPU를 활용하려면 `tune.run(resources_per_trial)`의 `gpu`에서 설정해야 합니다. 이것은 각 Trial에 대해 자동으로 `CUDA_VISIBLE_DEVICES` 설정됩니다 .
@@ -77,6 +77,8 @@ tune.run(trainable, num_samples=10, resources_per_trial={"cpu": 2, "gpu": 1})
 **문제 해결** : 경우에 따라 새 Trial을 실행할 때 GPU 메모리 문제가 발생할 수 있습니다. 이는 이전 Trial이 GPU 상태를 충분히 빠르게 정리하지 않았기 때문일 수 있습니다. 이를 피하기 위해 `tune.utils.wait_for_gpu`를 사용할 수 있습니다 - [docstring을](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#tune-util-ref) 참고하세요.
 
 ---
+
+
 
 ### Concurrent samples [¶](https://docs.ray.io/en/latest/tune/user-guide.html#concurrent-samples)
 
@@ -486,7 +488,7 @@ $ pip install tensorboardX
 $ tensorboard --logdir=~/ray_results/my_experiment
 ```
 
-sudo 액세스 권한이 없는 원격 다중 사용자 클러스터에서 Ray를 실행하는 경우 다음 명령을 실행하여 텐서보드가 tmp 디렉토리에 쓸 수 있는지 확인할 수 있습니다.
+sudo 액세스 권한이 없는 원격 다중 사용자 클러스터에서 Ray를 실행하는 경우 다음 명령을 실행하여 텐서보드가 tmp 디렉토리에 파일을 쓸 수 있도록 하십시오.
 
 ```python
 $ export TMPDIR=/tmp/$USER; mkdir -p $TMPDIR; tensorboard --logdir=~/ray_results
@@ -512,9 +514,11 @@ tune.run(
 
 ![../_images/tune-hparams.png](https://docs.ray.io/en/latest/_images/tune-hparams.png)
 
-## 콘솔 출력 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#console-output)
 
-사용자가 제공한 필드는 최선을 다해 자동으로 출력됩니다. [Reporter](https://docs.ray.io/en/latest/tune/api_docs/reporters.html#tune-reporter-doc) 개체를 사용 하여 콘솔 출력을 사용자 지정할 수 있습니다 .
+
+## Console Output [¶](https://docs.ray.io/en/latest/tune/user-guide.html#console-output)
+
+사용자가 제공한 필드는 최선을 다해 자동으로 출력됩니다. [Reporter](https://docs.ray.io/en/latest/tune/api_docs/reporters.html#tune-reporter-doc) 개체를 사용 하여 콘솔 출력을 customize할 수 있습니다 .
 
 ```python
 == Status ==
@@ -535,9 +539,9 @@ Number of trials: 4 (4 RUNNING)
 
 
 
-## 결과 업로드 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#uploading-results)
+## Uploading Results [¶](https://docs.ray.io/en/latest/tune/user-guide.html#uploading-results)
 
-업로드 디렉터리가 제공되면 Tune은 `local_dir`기본적으로 표준 S3/gsutil/HDFS URI를 지원하는 지정된 디렉터리로 결과를 자동으로 동기화합니다 .
+업로드 디렉터리가 제공되면 Tune은 `local_dir`에서 기본적으로 표준 S3/gsutil/HDFS URI를 지원하는 지정된 디렉터리로 결과를 자동으로 동기화합니다 .
 
 ```python
 tune.run(
@@ -547,9 +551,7 @@ tune.run(
 )
 ```
 
-
-
-의 `sync_to_cloud`인수를 사용하여 임의의 저장소를 지정하도록 이를 사용자 지정할 수 있습니다 `tune.SyncConfig`. 이 인수는 대체 필드가 동일한 문자열 또는 임의의 함수를 지원합니다.
+`tune.SyncConfig`의 `sync_to_cloud`인수를 사용하여 임의의 저장소를 지정할 수 있습니다. 이 인수는 대체 필드가 동일한 문자열 또는 임의의 함수를 지원합니다.
 
 ```python
 tune.run(
@@ -561,9 +563,7 @@ tune.run(
 )
 ```
 
-
-
-문자열이 제공되면 대체 필드 `{source}`및 `{target}`와 같은 등이 포함되어야 합니다 . 또는 다음 서명과 함께 함수를 제공할 수 있습니다.`s3 sync {source} {target}`
+문자열이 제공되면 `s3 sync {source} {target}` 과 같은 대체 필드 `{source}`및 `{target}` 등이 포함되어야 합니다. 또는 다음 서명과 함께 함수를 제공할 수 있습니다.
 
 ```python
 def custom_sync_func(source, target):
@@ -575,19 +575,17 @@ def custom_sync_func(source, target):
     sync_process.wait()
 ```
 
+기본적으로 동기화는 300초마다 발생합니다. 동기화 빈도를 변경하려면 드라이버의 `TUNE_CLOUD_SYNC_S` 환경 변수를 원하는 동기화 주기로 설정하세요.
 
-
-기본적으로 동기화는 300초마다 발생합니다. 동기화 빈도를 변경하려면 `TUNE_CLOUD_SYNC_S`드라이버 의 환경 변수를 원하는 동기화 주기로 설정하세요.
-
-업로드는 전역 실험 상태가 수집될 때만 발생하며, 이 빈도는 `TUNE_GLOBAL_CHECKPOINT_S`환경 변수에 의해 결정됩니다 . 따라서 실제 업로드 기간은 로 지정됩니다 .`max(TUNE_CLOUD_SYNC_S, TUNE_GLOBAL_CHECKPOINT_S)`
+업로드는 전역 실험 상태가 수집될 때만 발생하며, 이 빈도는 `TUNE_GLOBAL_CHECKPOINT_S`환경 변수에 의해 결정됩니다 . 따라서 실제 업로드 기간은 `max(TUNE_CLOUD_SYNC_S, TUNE_GLOBAL_CHECKPOINT_S)`입니다.
 
 
 
-## Docker로 튜닝 사용하기 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#using-tune-with-docker)
+## Using Tune with Docker [¶](https://docs.ray.io/en/latest/tune/user-guide.html#using-tune-with-docker)
 
-Tune은 필요에 따라 서로 다른 원격 컨테이너 간에 파일과 검사점을 자동으로 동기화합니다.
+Tune은 필요에 따라 서로 다른 원격 컨테이너 간에 파일과 체크포인트를 자동으로 동기화합니다.
 
-Docker 클러스터에서 이 작업을 수행하려면, 예를 들어 도커 컨테이너와 함께 Ray 자동 확장 처리를 사용하는 경우 `DockerSyncer`의 `sync_to_driver`인수에 a 를 전달해야 합니다 `tune.SyncConfig`.
+Docker 클러스터에서 이 작업을 수행하려면 (예를 들어 도커 컨테이너와 함께 Ray 자동 확장 처리를 사용하는 경우) `tune.SyncConfig`의 `sync_to_driver`인수에  `DockerSyncer`를 전달해야 합니다.
 
 ```python
 from ray.tune.integration.docker import DockerSyncer
@@ -599,15 +597,13 @@ tune.run(train, sync_config=sync_config)
 
 
 
+## Using Tune with Kubernetes [¶](https://docs.ray.io/en/latest/tune/user-guide.html#using-tune-with-kubernetes)
 
-
-## Kubernetes로 Tune 사용하기 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#using-tune-with-kubernetes)
-
-Ray Tune은 필요에 따라 서로 다른 원격 노드 간에 파일과 체크포인트를 자동으로 동기화합니다. 이것은 일반적으로 SSH를 통해 발생하지만 특히 많은 시도를 병렬로 실행할 때 [성능 병목 현상](https://docs.ray.io/en/latest/tune/tutorials/overview.html#tune-bottlenecks) 이 발생할 수 있습니다 .
+Ray Tune은 필요에 따라 서로 다른 원격 노드 간에 파일과 체크포인트를 자동으로 동기화합니다. 이것은 일반적으로 SSH를 통해 발생하지만 특히 많은 trial을 병렬로 실행할 때 [병목 현상](https://docs.ray.io/en/latest/tune/tutorials/overview.html#tune-bottlenecks) 이 발생할 수 있습니다 .
 
 대신 노드 간 추가 동기화가 필요하지 않도록 체크포인트에 공유 스토리지를 사용해야 합니다. 두 가지 주요 옵션이 있습니다.
 
-먼저 다음을 사용하여 [`DurableTrainable`](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#ray.tune.durable)AWS S3 또는 Google Cloud Storage와 같은 클라우드 스토리지에 로그 및 체크포인트를 저장할 수 있습니다 .
+첫번째,  [`DurableTrainable`](https://docs.ray.io/en/latest/tune/api_docs/trainable.html#ray.tune.durable)을 사용하여 AWS S3 또는 Google Cloud Storage와 같은 클라우드 스토리지에 로그 및 체크포인트를 저장할 수 있습니다 .
 
 ```python
 from ray import tune
@@ -622,9 +618,7 @@ tune.run(
 )
 ```
 
-
-
-둘째, NFS와 같은 공유 파일 시스템을 설정할 수 있습니다. 이렇게 하면 자동 평가판 동기화를 비활성화합니다.
+둘째, NFS와 같은 공유 파일 시스템을 설정할 수 있습니다. 이렇게 하면 자동 trial 동기화를 비활성화합니다.
 
 ```python
 from ray import tune
@@ -640,9 +634,7 @@ tune.run(
 )
 ```
 
-
-
-마지막으로, 시험 동기화를 위해 여전히 ssh를 사용하고 싶지만 Ray 클러스터 런처에서 실행되고 있지 않다면 `KubernetesSyncer`의 `sync_to_driver`인수에 전달해야 할 수도 있습니다 `tune.SyncConfig`. Kubernetes 네임스페이스를 명시적으로 지정해야 합니다.
+마지막으로, trial 동기화를 위해 여전히 ssh를 사용하고 싶지만 Ray 클러스터 런처에서 실행되고 있지 않다면 `tune.SyncConfig`의 `sync_to_driver`인수에 `KubernetesSyncer`를 전달해야 할 수도 있습니다. 또한 Kubernetes 네임스페이스를 명시적으로 지정해야 합니다.
 
 ```python
 from ray.tune.integration.kubernetes import NamespacedKubernetesSyncer
@@ -653,27 +645,23 @@ sync_config = tune.SyncConfig(
 tune.run(train, sync_config=sync_config)
 ```
 
-
-
 다른 두 옵션 중 하나를 대신 사용하는 것이 좋습니다. 그러면 오버헤드가 줄어들고 포드가 SSH를 통해 서로 연결할 필요가 없기 때문입니다.
 
 
 
-## stdout 및 stderr을 파일로 리디렉션 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#redirecting-stdout-and-stderr-to-files)
+## Redirecting stdout and stderr to files [¶](https://docs.ray.io/en/latest/tune/user-guide.html#redirecting-stdout-and-stderr-to-files)
 
-stdout 및 stderr 스트림은 일반적으로 콘솔에 인쇄됩니다. 원격 액터의 경우 Ray는 이러한 로그를 수집하여 헤드 프로세스에 인쇄합니다.
+stdout 및 stderr 스트림은 일반적으로 콘솔에 출력됩니다. 원격 액터의 경우 Ray는 이러한 로그를 수집하여 헤드 프로세스에 출력합니다.
 
-그러나 나중에 분석 또는 문제 해결을 위해 스트림 출력을 파일로 수집하려는 경우 Tune은 이를 위한 유틸리티 매개변수 를 제공합니다 `log_to_file`.
+그러나 사후분석 또는 문제 해결을 위해 스트림 출력을 파일로 수집하려는 경우 Tune은 이를 위한 유틸리티 매개변수 `log_to_file`를 제공합니다.
 
-에 전달 `log_to_file=True`하면 `tune.run()`stdout 및 stderr이 각각 `trial_logdir/stdout`및 에 기록됩니다 `trial_logdir/stderr`.
+`tune.run()`에 `log_to_file=True`를 전달하면 stdout 및 stderr이 각각 `trial_logdir/stdout`및 `trial_logdir/stderr`에 기록됩니다.
 
 ```python
 tune.run(
     trainable,
     log_to_file=True)
 ```
-
-
 
 출력 파일을 지정하려면 결합된 출력이 저장될 하나의 파일 이름을 전달하거나 stdout 및 stderr에 대해 각각 두 개의 파일 이름을 전달할 수 있습니다.
 
@@ -687,19 +675,17 @@ tune.run(
     log_to_file=("my_stdout.log", "my_stderr.log"))
 ```
 
+파일 이름은 Trial의 logdir에 상대적입니다. 절대 경로도 전달할 수 있습니다.
 
-
-파일 이름은 평가판의 logdir에 상대적입니다. 절대 경로도 전달할 수 있습니다.
-
-경우 `log_to_file`설정, 조정은 자동으로 레이의 기본 로거를위한 새로운 로깅 핸들러를 등록하고 지정된 표준 에러 출력 파일에 출력을 기록합니다.
+`log_to_file`이 설정된 경우, Tune은 자동으로 Ray의 기본 로거를위한 새로운 로깅 핸들러를 등록하고 지정된 stderr 출력 파일에 출력을 기록합니다.
 
 
 
-## 콜백 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#callbacks)
+## Callbacks[¶](https://docs.ray.io/en/latest/tune/user-guide.html#callbacks)
 
-Ray Tune은 훈련 과정의 다양한 시간 동안 호출되는 콜백을 지원합니다. 콜백은 매개변수로 전달될 수 있으며 `tune.run()`하위 메소드가 자동으로 호출됩니다.
+Ray Tune은 학습 과정의 다양한 시간 동안 호출되는 콜백을 지원합니다. 콜백은 `tune.run()`의 매개변수로 전달될 수 있으며 하위 메소드가 자동으로 호출됩니다.
 
-이 간단한 콜백은 결과가 수신될 때마다 메트릭을 인쇄합니다.
+이 간단한 콜백은 결과가 수신될 때마다 metric을 인쇄합니다.
 
 ```python
 from ray import tune
@@ -721,70 +707,66 @@ tune.run(
     callbacks=[MyCallback()])
 ```
 
-
-
-자세한 내용과 사용 가능한 후크 [는 Ray Tune 콜백용 API 문서](https://docs.ray.io/en/latest/tune/api_docs/internals.html#tune-callbacks-docs) 를 [참조](https://docs.ray.io/en/latest/tune/api_docs/internals.html#tune-callbacks-docs) 하세요 .
+자세한 내용과 사용 가능한 Hooks는 [Ray Tune 콜백 API 문서](https://docs.ray.io/en/latest/tune/api_docs/internals.html#tune-callbacks-docs) 를 참조하세요.
 
 
 
-## 디버깅 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#debugging)
+## Debugging[¶](https://docs.ray.io/en/latest/tune/user-guide.html#debugging)
 
-기본적으로 Tune은 여러 프로세스에서 하이퍼파라미터 평가를 실행합니다. 그러나 훈련 프로세스를 디버그해야 하는 경우 단일 프로세스에서 모든 작업을 수행하는 것이 더 쉬울 수 있습니다. `local_mode`전에 다음을 호출하여 모든 Ray 함수가 단일 프로세스에서 발생하도록 할 수 있습니다 `tune.run`.
+기본적으로 Tune은 여러 프로세스에서 하이퍼파라미터 평가를 실행합니다. 그러나 학습 프로세스를 디버그해야 하는 경우 단일 프로세스에서 모든 작업을 수행하는 것이 더 쉬울 수 있습니다. `tune.run`전에 `local_mode`를 호출하여 모든 Ray 함수가 단일 프로세스에서 발생하도록 할 수 있습니다 .
 
 ```python
 ray.init(local_mode=True)
 ```
 
+다중 구성 평가가 있는 로컬 모드는 계산을 interleave(교차 배치?)하므로 단일 구성 평가를 실행할 때 가장 자연스럽게 사용됩니다.
+
+`local_mode`는 몇 가지 발견된 문제가 있습니다, 추가적인 것은 [여기](https://docs.ray.io/en/latest/auto_examples/testing-tips.html#local-mode-tips)를 참조하십시오.
 
 
-다중 구성 평가가 있는 로컬 모드는 계산을 인터리브하므로 단일 구성 평가를 실행할 때 가장 자연스럽게 사용됩니다.
 
-참고 `local_mode`몇 가지 알려진 문제가 있습니다, 그래서 읽어 보시기 바랍니다 [이 끝을](https://docs.ray.io/en/latest/auto_examples/testing-tips.html#local-mode-tips) 추가 정보를 원하시면.
+## Stopping after the first failure [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-after-the-first-failure)
 
-## 첫 번째 실패 후 중지 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#stopping-after-the-first-failure)
-
-기본적으로 `tune.run`모든 시도가 종료되거나 오류가 발생할 때까지 계속 실행됩니다. 시행 착오가 발생 **하는** 즉시 전체 Tune 실행을 중지하려면 :
+기본적으로 `tune.run`은 모든 Trial이 종료되거나 오류가 발생할 때까지 계속 실행됩니다. **어떤** Trial이라도 에러가 나는 즉시 전체 Tune 실행을 중지하려면 :
 
 ```python
 tune.run(trainable, fail_fast=True)
 ```
 
-
-
-이것은 대규모 하이퍼파라미터 실험을 설정하려고 할 때 유용합니다.
+이것은 대규모 하이퍼파라미터 실험을 설정할 때 유용합니다.
 
 
 
-## 환경 변수 [¶](https://docs.ray.io/en/latest/tune/user-guide.html#environment-variables)
+## Environment variables [¶](https://docs.ray.io/en/latest/tune/user-guide.html#environment-variables)
 
 Ray Tune의 일부 동작은 환경 변수를 사용하여 구성할 수 있습니다. Ray Tune이 현재 고려하는 환경 변수는 다음과 같습니다.
 
-- **TUNE_CLUSTER_SSH_KEY** : Tune 드라이버 프로세스에서 체크포인트 동기화를 위해 원격 클러스터 시스템에 연결하는 데 사용하는 SSH 키입니다. 이것이 설정되지 않은 경우 `~/ray_bootstrap_key.pem`사용됩니다.
-- **TUNE_DISABLE_AUTO_CALLBACK_LOGGERS** : Ray Tune은 CSV 및 JSON 로거 콜백이 전달되지 않은 경우 자동으로 추가합니다. 이 변수를 1로 설정 하면 이 자동 생성이 비활성화됩니다. 이것은 튜닝 실행 후 결과 분석에 영향을 미칠 가능성이 가장 높다는 점에 유의하십시오.
-- **TUNE_DISABLE_AUTO_CALLBACK_SYNCER** : Ray Tune은 동기화 로그 및 체크포인트가 전달되지 않은 경우 서로 다른 노드 간의 체크포인트를 동기화하기 위해 자동으로 Syncer 콜백을 추가합니다. 이 변수를 1로 설정 하면 이 자동 생성이 비활성화됩니다. 이는 PopulationBasedTraining과 같은 고급 일정 알고리즘에 영향을 미칠 가능성이 높습니다.
-- **TUNE_DISABLE_AUTO_INIT** : `ray.init()`Ray 세션에 연결되지 않은 경우 자동 호출을 비활성화합니다 .
-- **TUNE_DISABLE_DATED_SUBDIR** : Ray Tune은 이름이 명시적으로 지정되지 않았거나 학습 가능 항목이 문자열로 전달되지 않은 경우 실험 디렉토리에 날짜 문자열을 자동으로 추가합니다. 이 환경 변수를 설정 `1`하면 이러한 날짜 문자열을 추가할 수 없습니다.
-- **TUNE_DISABLE_STRICT_METRIC_CHECKING** : , 스케줄러 또는 검색 알고리즘 을 통해 Tune에 메트릭을 보고 `tune.report()`하고 `metric`매개변수를 전달할 `tune.run()`때 메트릭이 결과에 보고되지 않으면 Tune에 오류가 발생합니다. 이 환경 변수를 `1`로 설정하면 이 검사가 비활성화됩니다.
-- **TUNE_DISABLE_SIGINT_HANDLER** : Ray Tune은 SIGINT 신호(예: Ctrl+C로 전송)를 포착하여 정상적으로 종료하고 최종 체크포인트를 수행합니다. 이 변수를 로 설정하면 `1`신호 처리가 비활성화되고 실행이 즉시 중지됩니다. 기본값은 `0`입니다.
+- **TUNE_CLUSTER_SSH_KEY** : Tune 드라이버 프로세스에서 체크포인트 동기화를 위해 원격 클러스터 시스템에 연결하는 데 사용하는 SSH 키입니다. 이것이 설정되지 않은 경우 `~/ray_bootstrap_key.pem`이 사용됩니다.
+- **TUNE_DISABLE_AUTO_CALLBACK_LOGGERS** : Ray Tune은 CSV 및 JSON 로거 콜백이 전달되지 않은 경우 자동으로 추가합니다. 이 변수를 `1`로 설정 하면 이러한 자동 생성이 비활성화됩니다. 이것은 튜닝 실행 후 결과 분석에 영향을 미칠 가능성이 가장 높다는 점에 유의하십시오.
+- **TUNE_DISABLE_AUTO_CALLBACK_SYNCER** : Ray Tune은 동기화 로그 및 체크포인트가 전달되지 않은 경우 서로 다른 노드 간의 체크포인트를 동기화하기 위해 자동으로 Syncer 콜백을 추가합니다. 이 변수를 `1`로 설정 하면 이러한 자동 생성이 비활성화됩니다. 이는 PopulationBasedTraining과 같은 고급 스케쥴링 알고리즘에 영향을 미칠 가능성이 높습니다.
+- **TUNE_DISABLE_AUTO_INIT** : Ray 세션에 연결되지 않은 경우 `ray.init()` 자동 호출을 비활성화합니다 .
+- **TUNE_DISABLE_DATED_SUBDIR** : Ray Tune은 이름이 명시적으로 지정되지 않았거나 학습 가능 항목이 문자열로 전달되지 않은 경우 실험 디렉토리에 날짜 문자열을 자동으로 추가합니다. 이 환경 변수를 `1`로 설정하면 이러한 자동 추가를 비활성화 합니다.
+- **TUNE_DISABLE_STRICT_METRIC_CHECKING** : `tune.report()`을 통해 Tune에 metrics를 보고하고 `tune.run()`, 스케줄러 또는 검색 알고리즘에 `metric`매개변수를 전달할 때, metric이 결과에 보고되지 않으면 Tune에 오류가 발생합니다. 이 환경 변수를 `1`로 설정하면 이 검사가 비활성화됩니다.
+- **TUNE_DISABLE_SIGINT_HANDLER** : Ray Tune은 SIGINT 신호(예: Ctrl+C로 전송)를 포착하여 정상적으로 종료하고 최종 체크포인트를 수행합니다. 이 변수를 `1`로 설정하면 신호 처리가 비활성화되고 실행이 즉시 중지됩니다. 기본값은 `0`입니다.
 - **TUNE_FUNCTION_THREAD_TIMEOUT_S** : 함수 API가 스레드에 완료를 지시한 후 스레드가 완료될 때까지 기다리는 시간(초). 기본값은 `2`입니다.
-- **TUNE_GLOBAL_CHECKPOINT_S** : Tune의 실험 상태가 체크포인트되는 빈도를 제한하는 시간(초)입니다. 설정하지 않으면 기본값이 로 설정됩니다 `10`.
-- **TUNE_MAX_LEN_IDENTIFIER** : 시도 하위 디렉토리 이름의 최대 길이(매개변수 값이 있는 이름)
-- **TUNE_MAX_PENDING_TRIALS_PG** : 배치 그룹이 사용될 때 보류 중인 시도의 최대 수입니다. 기본값 `auto`은 로 설정 되며 임의/격자 검색 및 기타 검색 알고리즘 에 대해 로 업데이트됩니다 .`max(16, cluster_cpus * 1.1)``1`
-- **TUNE_PLACEMENT_GROUP_AUTO_DISABLED** : Ray Tune은 레거시 리소스 요청 대신 배치 그룹을 자동으로 사용합니다. 이것을 1로 설정하면 레거시 배치가 활성화됩니다.
-- **TUNE_PLACEMENT_GROUP_CLEANUP_DISABLED** : Ray Tune `_tune__`은 실행을 시작하기 전에 이름에 접두사가 있는 기존 배치 그룹을 정리합니다 . 이는 `tune.run()`동일한 스크립트에서 에 대한 여러 호출 이 수행 될 때 예약된 배치 그룹이 제거되었는지 확인하는 데 사용됩니다 . 다른 스크립트에서 여러 Tune 실행을 병렬로 실행하는 경우 이 기능을 비활성화할 수 있습니다. 비활성화하려면 1로 설정합니다.
-- **TUNE_PLACEMENT_GROUP_PREFIX** : Ray Tune에 의해 생성된 배치 그룹의 접두사. 이 접두사는 예를 들어 튜닝 실행 시작/중지 시 정리해야 하는 배치 그룹을 식별하는 데 사용됩니다. 이것은 첫 번째 실행이 시작될 때 고유한 이름으로 초기화됩니다.
-- **TUNE_PLACEMENT_GROUP_RECON_INTERVAL** : 배치 그룹을 조정하는 빈도입니다. 조정은 요청된 배치 그룹 수와 보류/실행 시도가 동기화되었는지 확인하는 데 사용됩니다. 정상적인 상황에서는 어쨌든 다르지 않아야 하지만 조정을 통해 배치 그룹이 수동으로 제거되는 경우를 캡처해야 합니다. 조정에는 많은 시간이 걸리지 않지만 많은 수의 짧은 시도를 실행할 때 추가될 수 있습니다. 기본값은 매 `5`(초)입니다.
-- **TUNE_PLACEMENT_GROUP_WAIT_S** : 시험 실행기가 조정 루프를 계속하기 전에 배치 그룹이 배치되기를 기다리는 기본 시간입니다. 이것을 float로 설정하면 몇 초 동안 차단됩니다. 이것은 주로 테스트 목적으로 사용됩니다. 기본값은 -1이며 차단을 비활성화합니다.
-- **TUNE_RESULT_DIR** : Ray Tune 시도 결과가 저장되는 디렉토리. 이것이 설정되지 않은 경우 `~/ray_results`사용됩니다.
-- **TUNE_RESULT_BUFFER_LENGTH** : Ray Tune은 드라이버에게 전달되기 전에 훈련 가능한 결과를 버퍼링할 수 있습니다. 이를 활성화하면 훈련 가능 항목이 추측에 따라 계속되기 때문에 일정 결정이 지연될 수 있습니다. `0`결과 버퍼링 을 비활성화 하도록 설정합니다 . 기본값은 1000(결과) 또는 와 함께 사용되는 경우 1(버퍼링 없음)입니다 `checkpoint_at_end`.
-- **TUNE_RESULT_BUFFER_MAX_TIME_S** : 마찬가지로, Ray Tune 버퍼는 최대 `number_of_trial/10`초 까지 결과를 생성 하지만 이 값보다 길지는 않습니다. 기본값은 100(초)입니다.
-- **TUNE_RESULT_BUFFER_MIN_TIME_S** : 또한 결과를 버퍼링하는 최소 시간을 지정할 수 있습니다. 기본값은 0입니다.
-- **TUNE_SYNCER_VERBOSITY** : Tune with Docker Syncer 사용 시 명령어 출력량. 기본값은 0입니다.
-- **TUNE_TRIAL_STARTUP_GRACE_PERIOD** : 평가판 시작 후 Ray Tune이 성공적인 평가판 시작을 확인하는 시간입니다. 유예 기간이 지나면 Tune은 실행 중인 평가판 결과가 수신될 때까지 차단됩니다. 이것을 0 이하로 설정하여 비활성화할 수 있습니다.
-- **TUNE_WARN_THRESHOLD_S** : Tune 이벤트 루프 작업이 너무 오래 걸리는 경우 로깅을 위한 임계값입니다. 기본값은 0.5(초)입니다.
-- **TUNE_STATE_REFRESH_PERIOD** : Ray에서 추적하는 리소스를 업데이트하는 빈도입니다. 기본값은 10(초)입니다.
+- **TUNE_GLOBAL_CHECKPOINT_S** : Tune의 실험 상태가 체크포인트되는 빈도를 제한하는 시간(초)입니다. 설정하지 않으면 기본값이 `10`으로 설정됩니다.
+- **TUNE_MAX_LEN_IDENTIFIER** : Trial 하위 디렉토리 이름의 최대 길이(매개변수 값이 있는 이름)
+- **TUNE_MAX_PENDING_TRIALS_PG** : 배치 그룹이 사용될 때 보류 중인 Trial의 최대 수입니다. 기본값은 `auto`로 설정 되며 random/grid 검색에 대해`max(16, cluster_cpus * 1.1)`로 기타 검색 알고리즘에 대해 `1`로업데이트됩니다.
+- **TUNE_PLACEMENT_GROUP_AUTO_DISABLED** : Ray Tune은 레거시 리소스 요청 대신 배치 그룹을 자동으로 사용합니다. 이것을 `1`로 설정하면 레거시 배치가 활성화됩니다.
+- **TUNE_PLACEMENT_GROUP_CLEANUP_DISABLED** : Ray Tune 은 실행을 시작하기 전에 이름에 `_tune__` 접두사가 있는 기존 배치 그룹을 정리합니다. 이는 동일한 스크립트에서 `tune.run()`에 대한 여러 호출이 수행 될 때 예약된 배치 그룹이 제거되었는지 확인하는 데 사용됩니다 . 다른 스크립트에서 여러 Tune 실행을 병렬로 실행하는 경우 이 기능을 비활성화할 수 있습니다. 비활성화하려면 `1`로 설정합니다.
+- **TUNE_PLACEMENT_GROUP_PREFIX** : Ray Tune에 의해 생성된 배치 그룹의 접두사. 이 접두사는 튜닝 실행 시작/종료 시 정리해야 하는 배치 그룹을 식별하는 데 사용됩니다. 이것은 첫 번째 실행이 시작될 때 고유한 이름으로 초기화됩니다.
+- **TUNE_PLACEMENT_GROUP_RECON_INTERVAL** : 배치 그룹을 조정(reconcile)하는 빈도입니다. 조정은 요청된 배치 그룹 수와 보류/Trial 실행이 동기화되었는지 확인하는 데 사용됩니다. 정상적인 상황에서는 다르지 않아야 하지만 조정을 통해 배치 그룹이 수동으로 제거되는 경우를 캡처해야 합니다. 조정에는 많은 시간이 걸리지 않지만 많은 수의 짧은 Trial을 실행할 때는 시간이 더 걸릴 수 있습니다. 기본값은 매 `5`(초)입니다.
+- **TUNE_PLACEMENT_GROUP_WAIT_S** : Trial 실행기가 조정(tuning) 루프를 계속하기 전에 배치 그룹이 배치되기를 기다리는 기본 시간입니다. 이것을 float로 설정하면 몇 초 동안 차단됩니다. 이것은 주로 테스트 목적으로 사용됩니다. 기본값은 -1이며 차단을 비활성화합니다.
+- **TUNE_RESULT_DIR** : Ray Tune Trial 결과가 저장되는 디렉토리. 이것이 설정되지 않은 경우 `~/ray_results`가 사용됩니다.
+- **TUNE_RESULT_BUFFER_LENGTH** : Ray Tune은 드라이버에게 전달되기 전에 학습 가능한 결과를 버퍼링할 수 있습니다. 이를 활성화하면 학습 가능 항목이 추측에 따라 계속되기 때문에 일정 결정이 지연될 수 있습니다. 이 변수를 `0`으로 설정하여 버퍼링을 비활성화합니다. 기본값은 `1000`(결과) 또는 `checkpoint_at_end`와 함께 사용되는 경우 `1`(버퍼링 없음)입니다.
+- **TUNE_RESULT_BUFFER_MAX_TIME_S** : 마찬가지로, Ray Tune 버퍼는 최대 `number_of_trial/10`초까지 결과를 생성하지만 이 값보다 길지는 않습니다. 기본값은 `100`(초)입니다.
+- **TUNE_RESULT_BUFFER_MIN_TIME_S** : 또한 결과를 버퍼링하는 최소 시간을 지정할 수 있습니다. 기본값은 `0`입니다.
+- **TUNE_SYNCER_VERBOSITY** : Tune with Docker Syncer 사용 시 명령어 출력량. 기본값은 `0`입니다.
+- **TUNE_TRIAL_STARTUP_GRACE_PERIOD** :  Trial 시작 후 Ray Tune이 성공적인 Trial 시작을 확인하는 시간입니다. 유예 기간이 지나면 Tune은 실행 중인 Trial 결과가 수신될 때까지 차단됩니다. 이것을 `0` 이하로 설정하여 비활성화할 수 있습니다.
+- **TUNE_WARN_THRESHOLD_S** : Tune 이벤트 루프 작업이 너무 오래 걸리는 경우 로깅을 위한 임계값입니다. 기본값은 `0.5`(초)입니다.
+- **TUNE_STATE_REFRESH_PERIOD** : Ray에서 추적하는 리소스를 업데이트하는 빈도입니다. 기본값은 `10`(초)입니다.
 
-주로 통합 라이브러리와 관련된 몇 가지 환경 변수가 있습니다.
+주로 통합 라이브러리와 관련된 몇 가지 환경 변수는 다음과 같습니다.
 
 - **SIGOPT_KEY** : SigOpt API 액세스 키.
-- **WANDB_API_KEY** : 가중치 및 **편향** API 키. 대신 사용할 수도 있습니다 .`wandb login`
+- **WANDB_API_KEY** : 가중치 및 **편향** API 키. `wandb login`를 대신 사용할 수도 있습니다 .
